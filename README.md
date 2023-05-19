@@ -99,7 +99,7 @@ Although some distributions as Anaconda may require to use *conda* instead of *p
 
 ### How to train the example problem ###
 
-The *config.json* is already prepared to reproduce the Problem 3 of the original [paper](https://arxiv.org/abs/2305.08448), although the obtained results may not be identical as the resolutions presented in the project. In order to run the training procedure once the *config.json* has been prepared, is to execute the command:
+The *config.json* is already prepared to reproduce the Problem 3 of the original [paper](https://arxiv.org/abs/2305.08448), although the obtained results may not be identical as those presented in the project. In order to run the training procedure once the *config.json* has been prepared, is to execute the command:
 
 `python3 training_script.py`
 
