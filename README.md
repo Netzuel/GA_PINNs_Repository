@@ -68,12 +68,12 @@ General procedure of our methodology. The input to our neural network is a set o
 
 ### Some results ###
 
-<img src=./figures/Results_Problem_2.png width="200" height="300"/><img src=./figures/Problem_2_extra_plots.png width="79" height="291"/>
-
-**Left**: Solution for the physical variables at $t=0.4$ for Problem 3 (Section 4.3). The analytical solution is represented by a solid black curve. The solutions obtained with our GA-PINNs method are shown in the top row while those for the base PINN model are displayed in
+<img src=./figures/Results_Problem_2.png width="500" height="750"/>
+Solution for the physical variables at $t=0.4$ for Problem 3 (Section 4.3). The analytical solution is represented by a solid black curve. The solutions obtained with our GA-PINNs method are shown in the top row while those for the base PINN model are displayed in
 the bottom row. In the two cases the solutions are represented by blue circles.
 
-**Right**: Evolution of the physical losses (left plot) and relative l2 errors (middle plot) with the epoch number for Problem 3. The
+<img src=./figures/Problem_2_extra_plots.png width="790" height="291"/>
+Evolution of the physical losses (left plot) and relative l2 errors (middle plot) with the epoch number for Problem 3. The
 analytical solution is used as *ground truth* to compute the relative errors. The dashed green line in the middle plot represents the
 corresponding error for the numerical solution obtained with the second-order central HRSC scheme with a mesh of 400
 zones ($\Delta x=0.0025$). The heat map on the right plot shows the $\Lambda$ function after training.
