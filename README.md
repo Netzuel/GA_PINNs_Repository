@@ -60,7 +60,7 @@ The main purpose of this repository is to provide reproducible code for the GA-P
 
 ### Methodology ###
 
-<img src=./figures/Methodology_Diagram.png width="511" height="260"/>
+<img src=./figures/Methodology_Diagram.png width="767" height="390"/>
 
 General procedure of our methodology. The input to our neural network is a set of physical variables that include both time and space components, represented as the pair $(t, x)$. The neural architecture can vary in terms of the number of layers, internal activation functions, and the number of neurons per layer. Some general aspects, such as the adaptivity of the activation slopes ak will be dynamical, while there may be subtle variations depending on the problem at hand. The output of the network corresponds to the primitive variables $(\rho, u, p)$. These variables are subject to automatic differentiation to determine the residuals of the physical constraints and the initial conditions, which are then combined using weights ($\omega_{\mathcal{IC}}$, $\omega_{\mathcal{R}}$). Finally, the final loss function $\mathcal{L}$ is evaluated to determine whether the procedure should terminate after updating the network parameters, $\Theta$.
 
