@@ -46,7 +46,7 @@ The main purpose of this repository is to provide reproducible code for the GA-P
             - *n*: The *acceleration* hyperparameter of the trainable slopes, taking into account the one for the hidden layers and the list of parameters for the output variables (density, velocity, pressure).
             - *initial_slopes*: In a similar way, here we can define the initial slopes. These parameters will be multiplied by the *n* hyperparameter and will be trainable thorugh the process (in case that we have previously selected the custom activation functions; if we choose to use vanilla activations from PyTorch such as *nn.Sigmoid()*, these will not be used). We encourage the user to define both the initial slopes and the accelerations in order to get a product such as $n\cdot a=1.0$ or otherwise stability problems may arise.
         - *loss_function_parameters*:
-            - *w_R*: Weight of the residual (collocation) part of the loss, $\mathcal{L}_{\mathcal{R}}$.
+            - *w_R*: Weight of the residual (collocation) part of the loss, $\hat{\mathcal{L}}_{\mathcal{R}}$.
             - *w_IC*: List of the weights of the initial part of the loss, $\mathcal{L}_{\mathcal{IC}}$, corresponding to each one of the variables (density,velocity,pressure).
             - *lambda_to_use*: $\Lambda$ function that we want to consider. It accepts *lambda_1* and *lambda_2* as defined in the paper.
             - *alpha_set*: Set of hyperparameters corresponding to ($\alpha_{\rho}$, $\alpha_{u}$, $\alpha_{p}$), that is, the weight of the respective gradients in the GA-PINN methodology.
