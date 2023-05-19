@@ -9,7 +9,7 @@
 
 ---------------------------------------------------------------------------------------------------------------------------------
 
-The main purpose of this repository is to provide reproducible code for the GA-PINN methodology described in the paper <a href="https://arxiv.org/abs/2305.08448" target="_blank">Gradient-Annihilated PINNs for Solving Riemann Problems: Application to Relativistic Hydrodynamics</a>. The folders and scripts are distributed as follows:[go](http://stackoverflow.com){:target="_blank"}
+The main purpose of this repository is to provide reproducible code for the GA-PINN methodology described in the paper [Gradient-Annihilated PINNs for Solving Riemann Problems: Application to Relativistic Hydrodynamics](https://arxiv.org/abs/2305.08448). The folders and scripts are distributed as follows:
 
 - **Ground_Data/**: Folder containing the corresponding *ground truth* solutions used through the numerical examples of the paper. This folder contains one subfolder the Problem 3 that has been studied. Inside that folder, one should find two *.h5* files corresponding to the analytical and the HRSC (numerical) resolutions for the physical variables at final time. Both, the analytical and the numerical files, contain the following keys:
     - *dens_calculated*, *dens_initial*: Arrays of the density ($\rho$) at final time ($tmax$) and at initial time, respectively.
@@ -17,7 +17,7 @@ The main purpose of this repository is to provide reproducible code for the GA-P
     - *p_calculated*, *p_initial*: Arrays of the pressure ($p$) at final time ($tmax$) and at initial time, respectively.
     - *w_calculated*, *w_initial*: Arrays of the Lorentz factor ($W$) at final time ($tmax$) and at initial time, respectively.
     - *x_space*: Array of the spatial domain, going from $xmin$ to $xmax$ depending on the problem under consideration.
-- **Example_Problem/**: This folder contains example Python code using PyTorch to train a GA-PINN, corresponding to the *training_script.py* file. By default, the images and exported data are saved in the *Images/* and *Models_Data/* subfolders respectively, while the *.pt* files corresponding to the weights of the neural model are stored inside the *Models_Data/Model_Saved/* folder. In particular, the code is already written in order to reproduce the initial conditions of the *Problem 3* presented in the [paper](https://arxiv.org/abs/2305.08448){:target="_blank"} (Section 4.2).
+- **Example_Problem/**: This folder contains example Python code using PyTorch to train a GA-PINN, corresponding to the *training_script.py* file. By default, the images and exported data are saved in the *Images/* and *Models_Data/* subfolders respectively, while the *.pt* files corresponding to the weights of the neural model are stored inside the *Models_Data/Model_Saved/* folder. In particular, the code is already written in order to reproduce the initial conditions of the *Problem 3* presented in the [paper](https://arxiv.org/abs/2305.08448) (Section 4.2).
 - **custom_activations.py**: Script containing the custom activation functions that may be needed in the training procedures. These functions consider the slope parameter that could be considered trainable, as explained in the paper. More can be defined if needed, but as it is right now the script contains functions such as the hyperbolic tangent, the sigmoid, Heaviside, and softplus functions.
 - **models.py**: This script contains all the necessary code to define the *GA_PINN* class as reading from the *torch.nn.Module*. This class is imported into the aforementioned *training_script.py* of the example. As input, it admits:
     - *X_r*: Tensor of shape *(N_r,2)* where *N_r* corresponds to the number of points in the spatial internal domain $\Omega$, and *2* refers to 2 inputs since the first column will be the spatial tensor ($x$) and the second one will correspond to the temporal domain ($t$).
@@ -49,8 +49,8 @@ The main purpose of this repository is to provide reproducible code for the GA-P
             - *w_R*: Weight of the residual (collocation) part of the loss, $\mathcal{L}_{\mathcal{R}}$.
             - *w_IC*: List of the weights of the initial part of the loss, $\mathcal{L}_{\mathcal{IC}}$, corresponding to each one of the variables (density,velocity,pressure).
             - *lambda_to_use*: $\Lambda$ function that we want to consider. It accepts *lambda_1* and *lambda_2* as defined in the paper.
-            - *alpha_set*: Set of hyperparameters corresponding to ($\alpha_{\rho}$,$\alpha_{u}$,$\alpha_{p}$), that is, the weight of the respective gradients in the GA-PINN methodology.
-            - *beta_set*: Analogously, this defines the set of hyperparameters ($\beta_{\rho}$,$\beta_{u}$,$\beta_{p}$) corresponding to the exponents of the respective gradients.
+            - *alpha_set*: Set of hyperparameters corresponding to ($\alpha_{\rho}$, $\alpha_{u}$, $\alpha_{p}$), that is, the weight of the respective gradients in the GA-PINN methodology.
+            - *beta_set*: Analogously, this defines the set of hyperparameters ($\beta_{\rho}$, $\beta_{u}$, $\beta_{p}$) corresponding to the exponents of the respective gradients.
     - *training_process*:
         - *import*: This key contains the *analytical_solution_path* parameter referring to the path pointing to the *.h5* file containing the analytical / ground data.
         - *export*: This field contains some configurations about the folders where we want the data and images to get stored into. In addition, the *save_each* parameter corresponds to the number of epochs how often we desire to save the information.
@@ -99,7 +99,7 @@ Although some distributions as Anaconda may require to use *conda* instead of *p
 
 ### How to train the example problem ###
 
-The *config.json* is already prepared to reproduce the Problem 3 of the original [paper](https://arxiv.org/abs/2305.08448){:target="_blank"}, although the obtained results may not be identical as the resolutions presented in the project. In order to run the training procedure once the *config.json* has been prepared, is to execute the command:
+The *config.json* is already prepared to reproduce the Problem 3 of the original [paper](https://arxiv.org/abs/2305.08448), although the obtained results may not be identical as the resolutions presented in the project. In order to run the training procedure once the *config.json* has been prepared, is to execute the command:
 
 `python3 training_script.py`
 
