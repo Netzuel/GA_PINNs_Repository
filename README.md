@@ -1,4 +1,4 @@
-# Gradient-Annihilated PINNs for Solving Riemann Problems: Application to Relativistic Hydrodynamics
+# Gradient-Annihilated PINNs (GA-PINNs) for Solving Riemann Problems: Application to Relativistic Hydrodynamics
 ### Authors: Antonio Ferrer-Sánchez[^1][^2], José D. Martín-Guerrero[^1][^2], Roberto Ruiz de Austri[^3], Alejandro Torres-Forné[^4][^5], José A. Font[^4][^5] ###
 
 [^1]: IDAL, Electronic Engineering Department, ETSE-UV, University of Valencia, Avgda. Universitat s/n, 46100 Burjassot, Valencia, Spain.
