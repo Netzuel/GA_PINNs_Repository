@@ -93,7 +93,7 @@ The requirements can be installed using the available *requirements.txt* file. Y
 
 `pip install -r requirements.txt`
 
-Although having some distributions as Anaconda may need to use *conda* instead of *pip* after activating a particular environment.
+Although some distributions as Anaconda may require to use *conda* instead of *pip* after activating a particular environment.
 
 ---------------------------------------------------------------------------------------------------------------------------------
 
