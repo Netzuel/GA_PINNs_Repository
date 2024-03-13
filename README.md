@@ -60,7 +60,7 @@ The main purpose of this repository is to provide reproducible code for the GA-P
 
 ### Methodology ###
 
-<img src=./figures/Methodology_Diagram.svg width="767" height="390"/>
+<img src=./figures/Methodology_Diagram.svg scale="100%"/>
 
 General procedure of our methodology. The input to our neural network is a set of physical variables that include both time and space components, represented as the pair $(t, x)$. The neural architecture can vary in terms of the number of layers, internal activation functions, and the number of neurons per layer. Some general aspects, such as the adaptivity of the activation slopes ak will be dynamical, while there may be subtle variations depending on the problem at hand. The output of the network corresponds to the primitive variables $(\rho, u, p)$. These variables are subject to automatic differentiation to determine the residuals of the physical constraints and the initial conditions, which are then combined using weights ($\omega_{\mathcal{IC}}$, $\omega_{\mathcal{R}}$). Finally, the final loss function $\mathcal{L}$ is evaluated to determine whether the procedure should terminate after updating the network parameters, $\Theta$.
 
@@ -68,7 +68,7 @@ General procedure of our methodology. The input to our neural network is a set o
 
 ### Some results ###
 
-<img src=./figures/ICs_Problem_1.png width="750" height="500"/>
+<img src=./figures/ICs_Problem_1.png scale="100%"/>
 
 Physical variables for Sod Shock Tube initial conditions solved at $t=0.5$ with $\Gamma=5/3$. Analytical solution (solid black curve) serves as reference. GA-PINNs method in top row (**a**), base PINN model in bottom row (**b**). Predictions shown as blue circles. "SW", "CD", and "RW", indicate shock waves, contact discontinuities, and rarefactions, respectively, in the density plot in (**a**) for visual simplicity.
 
