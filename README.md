@@ -70,10 +70,9 @@ General procedure of our methodology. The input to our neural network is a set o
 
 <img src=./figures/ICs_Problem_1.png width="750" height="500"/>
 
-Solution for the physical variables at $t=0.4$ for Problem 3 (Section 4.3). The analytical solution is represented by a solid black curve. The solutions obtained with our GA-PINNs method are shown in the top row while those for the base PINN model are displayed in
-the bottom row. In the two cases the solutions are represented by blue circles.
+Physical variables for Sod Shock Tube initial conditions solved at $t=0.5$ with $\Gamma=5/3$. Analytical solution (solid black curve) serves as reference. GA-PINNs method in top row (\textbf{a}), base PINN model in bottom row (\textbf{b}). Predictions shown as blue circles. ``SW'', ``CD'', and ``RW'', indicate shock waves, contact discontinuities, and rarefactions, respectively, in the density plot in (\textbf{a}) for visual simplicity.
 
-<img src=./figures/Problem_2_extra_plots.png width="800" height="270"/>
+<img src=./figures/ICs_Problem_1_Losses.png width="800" height="270"/>
 
 Evolution of the physical losses (left plot) and relative l2 errors (middle plot) with the epoch number for Problem 3. The
 analytical solution is used as *ground truth* to compute the relative errors. The dashed green line in the middle plot represents the
