@@ -9,7 +9,7 @@
 
 ---------------------------------------------------------------------------------------------------------------------------------
 
-The main purpose of this repository is to provide reproducible code for the GA-PINN methodology described in the paper [Gradient-Annihilated PINNs for Solving Riemann Problems: Application to Relativistic Hydrodynamics](https://arxiv.org/abs/2305.08448). The folders and scripts are distributed as follows:
+The main purpose of this repository is to provide reproducible code for the GA-PINN methodology described in the paper [Gradient-Annihilated PINNs for Solving Riemann Problems: Application to Relativistic Hydrodynamics](https://www.sciencedirect.com/science/article/pii/S0045782524001622). The folders and scripts are distributed as follows:
 
 - **Ground_Data/**: Folder containing the corresponding *ground truth* solutions used through the numerical examples of the paper. This folder contains one subfolder for the Problem 3 that has been studied. Inside it, one can find two *.h5* files corresponding to the analytical and the HRSC (numerical) resolutions for the physical variables at final time. Both, the analytical and the numerical files, contain the following keys:
     - *dens_calculated*, *dens_initial*: Arrays of the density ($\rho$) at final time ($tmax$) and at initial time, respectively.
