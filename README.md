@@ -70,14 +70,11 @@ General procedure of our methodology. The input to our neural network is a set o
 
 <img src=./figures/ICs_Problem_1.png width="750" height="500"/>
 
-Physical variables for Sod Shock Tube initial conditions solved at $t=0.5$ with $\Gamma=5/3$. Analytical solution (solid black curve) serves as reference. GA-PINNs method in top row (\textbf{a}), base PINN model in bottom row (\textbf{b}). Predictions shown as blue circles. ``SW'', ``CD'', and ``RW'', indicate shock waves, contact discontinuities, and rarefactions, respectively, in the density plot in (\textbf{a}) for visual simplicity.
+Physical variables for Sod Shock Tube initial conditions solved at $t=0.5$ with $\Gamma=5/3$. Analytical solution (solid black curve) serves as reference. GA-PINNs method in top row (**a**), base PINN model in bottom row (**b**). Predictions shown as blue circles. "SW", "CD", and "RW", indicate shock waves, contact discontinuities, and rarefactions, respectively, in the density plot in (**a**) for visual simplicity.
 
 <img src=./figures/ICs_Problem_1_Losses.png width="800" height="270"/>
 
-Evolution of the physical losses (left plot) and relative l2 errors (middle plot) with the epoch number for Problem 3. The
-analytical solution is used as *ground truth* to compute the relative errors. The dashed green line in the middle plot represents the
-corresponding error for the numerical solution obtained with the second-order central HRSC scheme with a mesh of 400
-zones ($\Delta x=0.0025$). The heat map on the right plot shows the $\Lambda$ function after training.
+Graphic representation of loss metrics during training for the \textit{Sod Shock Tube} problem (Problem 1). (**a**) Total physical loss. (**b**) $l^{2}$ prediction errors in GA-PINN compared to the analytical solution, presented by independent variable, with the dashed green line indicating the error of the HRSC numerical method for reference. (**c**) Comparative illustration of the total $l^{2}$ error between the GA-PINN model and a baseline model.
 
 ---------------------------------------------------------------------------------------------------------------------------------
 
