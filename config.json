@@ -1,0 +1,55 @@
+{
+    "physical": {
+        "parameters": {
+            "adiabatic_constant": "5/3",
+            "temporal_range": [0.0, 0.4],
+            "spatial_range": [0.0, 1.0],
+            "N_t": "2**8",
+            "N_x": "2**7",
+            "N_0": "2**8",
+            "sampling_method": "sobol"
+        },
+        "initial_conditions": {
+            "density": [1.0, 0.125],
+            "velocity": [0.5, 0.5],
+            "pressure": [1.0, 0.1]
+        }
+    },
+    "neural": {
+        "general_parameters": {
+            "number_hidden": 4,
+            "number_neurons": 100,
+            "init": "xavier_uniform_"
+        },
+        "activation_functions": {
+            "hidden_layers": "nn.Tanh()",
+            "output": ["nn.Softplus()", "nn.Tanh()", "nn.Softplus()"]
+        },
+        "loss_function_parameters": {
+            "w_R": 1.0,
+            "w_IC": [1e4, 1e4, 1e4],
+            "alpha_set": [1.0, 1.0, 1.0],
+            "beta_set": [1.25, 1.25, 1.25]
+        }
+    },
+    "training_process": {
+        "device": "cuda",
+        "DTYPE": "torch.float32",
+        "import":{
+            "analytical_solution_path": "../Ground_Data/Problem_1/Analytical_Solution_Test_1.h5"
+        },
+        "export":{
+            "path_images": "Images/",
+            "path_data": "Models_Data/",
+            "path_models": "Models_Data/Model_Saved/",
+            "save_each_images": 5000,
+            "save_each_data": 20000
+        },
+        "parameters": {
+            "optimizer": "Adam",
+            "learning_rate": 1e-5,
+            "epochs": 600001,
+            "random_seed": 123456
+        }
+    }
+}
