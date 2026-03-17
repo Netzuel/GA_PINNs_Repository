@@ -20,7 +20,7 @@ The main purpose of this repository is to provide reproducible code for the GA-P
 - **Sod_Shock_Tube/**: This folder contains example Python code using PyTorch to train a GA-PINN, corresponding to the *training_script.py* file. By default, the images and exported data are saved in the *Images/* and *Models_Data/* subfolders respectively, while the *.pt* files corresponding to the weights of the neural model are stored inside the *Models_Data/Model_Saved/* folder.
 - **models.py**: This script contains all the necessary code to define the *GA_PINN* class as reading from the *torch.nn.Module*. This class is imported into the aforementioned *training_script.py* of the example. As input, it admits the configuration file which is imported as a JSON within the training script.
 - **utils.py**: Script containing some additional functions such as a function to save the results as *.h5* files, a function to plot them, and also functions to generate the physical domain and the initial conditions.
-- **Sod_Sochk_Tube/config.json**: This file corresponds to the configuration JSON of the training and the model. It contains several fields that can be modified in order to train the GA-PINN.
+- **Sod_Shock_Tube/config.json**: This file corresponds to the configuration JSON of the training and the model. It contains several fields that can be modified in order to train the GA-PINN.
     - *physical*:
         - *parameters*:
             - *adiabatic_constant*: $\Gamma$ factor of the equations of the hydrodynamics.
@@ -42,9 +42,9 @@ The main purpose of this repository is to provide reproducible code for the GA-P
         - *loss_function_parameters*:
             - *w_R*: Weight of the residual (collocation) part of the loss, $\hat{\mathcal{L}}_{\mathcal{R}}$.
             - *w_IC*: List of the weights of the initial part of the loss, $\mathcal{L}_{\mathcal{IC}}$, corresponding to each one of the variables (density,velocity,pressure).
-            - *$\alpha$_set*: Set of hyperparameters corresponding to ($\alpha_{\rho}$, $\alpha_{u}$, $\alpha_{p}$), that is, the weight of the respective gradients in the GA-PINN methodology.
-            - *$\beta$_set*: Analogously, this defines the set of hyperparameters ($\beta_{\rho}$, $\beta_{u}$, $\beta_{p}$) corresponding to the exponents of the respective gradients.
-            - *$\epsilon_{t}$*: OPTIONAL: Strenght parameter for the causality-enforcement.
+            - $\alpha$ *set*: Set of hyperparameters corresponding to ($\alpha_{\rho}$, $\alpha_{u}$, $\alpha_{p}$), that is, the weight of the respective gradients in the GA-PINN methodology.
+            - $\beta$ *set*: Analogously, this defines the set of hyperparameters ($\beta_{\rho}$, $\beta_{u}$, $\beta_{p}$) corresponding to the exponents of the respective gradients.
+            - $\epsilon_{t}$: OPTIONAL: Strenght parameter for the causality-enforcement.
     - *training_process*:
         - *device*: Defines the device that *PyTorch* is going to use (e.g. "cpu" or "cuda").
         - *DTYPE*: General DTYPE for the data. It is recommended to use *torch.float32*.

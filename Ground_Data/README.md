@@ -10,7 +10,7 @@ The configuration and information of the different problems considered is explai
 - $(t,x)\in[0,0.5]\times[0,1]$.
 - Suggested values for the hyperparameters:
 	- $\alpha_{\rho}=\alpha_{u}=\alpha_{p}=1.0$.
-	- $\beta_{\rho}=\beta_{u}=\beta_{p}=1.25$.
+	- $\beta_{\rho}=\beta_{u}=\beta_{p}=1.0$.
 
 Initial conditions:
 
