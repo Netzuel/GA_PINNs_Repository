@@ -56,7 +56,7 @@ The main purpose of this repository is to provide reproducible code for the GA-P
 
 ### Methodology ###
 
-<img src=./figures/Methodology_Diagram.pdf scale="100%"/>
+<img src=./figures/Methodology_Diagram.svg scale="100%"/>
 
 The methodology involves a neural network processing temporal and spatial physical variables $(t,x)$. Its architecture, including layers, activation functions, and neurons, is flexible. The network outputs primitive variables $(\rho,u,p)$, differentiated automatically to compute physical constraints and residuals of the initial conditions. These results combine using weights $(\omega_{\mathcal{IC}},\omega_{\mathcal{R}})$, evaluating the loss function $\mathcal{L}$ to update parameters $\Theta$.
 
