@@ -6,7 +6,7 @@
             "spatial_range": [0.0, 1.0],
             "N_t": "2**8",
             "N_x": "2**7",
-            "N_0": "2**8",
+            "N_0": "2**6",
             "sampling_method": "sobol"
         },
         "initial_conditions": {
@@ -18,18 +18,18 @@
     "neural": {
         "general_parameters": {
             "number_hidden": 6,
-            "number_neurons": 50,
-            "init": "xavier_uniform_"
+            "number_neurons": 50
         },
         "activation_functions": {
-            "hidden_layers": "nn.SiLU()",
+            "hidden_layers": "nn.Tanh()",
             "output": ["nn.Softplus()", "nn.Tanh()", "nn.Softplus()"]
         },
         "loss_function_parameters": {
             "w_R": 1.0,
-            "w_IC": [1e3, 1e3, 1e3],
-            "alpha_set": [1.0, 1.0, 1.0],
-            "beta_set": [1.25, 1.25, 1.25]
+            "w_IC": [1e4, 1e4, 1e4],
+            "α_set": [1.0, 1.0, 1.0],
+            "β_set": [1.0, 1.0, 1.0],
+            "ε_t": 1.0
         }
     },
     "training_process": {

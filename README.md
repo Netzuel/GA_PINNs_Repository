@@ -11,17 +11,16 @@
 
 The main purpose of this repository is to provide reproducible code for the GA-PINN methodology described in the paper [Gradient-Annihilated PINNs for Solving Riemann Problems: Application to Relativistic Hydrodynamics](https://www.sciencedirect.com/science/article/pii/S0045782524001622). The folders and scripts are distributed as follows:
 
-- **Ground_Data/**: Folder containing the corresponding *ground truth* solutions used through the numerical examples of the paper. This folder contains one subfolder for the Problem 3 that has been studied. Inside it, one can find two *.h5* files corresponding to the analytical and the HRSC (numerical) resolutions for the physical variables at final time. Both, the analytical and the numerical files, contain the following keys:
+- **Ground_Data/**: Folder containing the corresponding *ground truth* solutions used through the numerical examples of the paper. This folder contains one subfolder per problem considered in the manuscript. Inside each folder, one can find two *.h5* files corresponding to the analytical for the physical variables at final time. The following keys can be found:
     - *dens_calculated*, *dens_initial*: Arrays of the density ($\rho$) at final time ($tmax$) and at initial time, respectively.
     - *ur_calculated*, *ur_initial*: Arrays of the velocity ($u$) at final time ($tmax$) and at initial time, respectively.
     - *p_calculated*, *p_initial*: Arrays of the pressure ($p$) at final time ($tmax$) and at initial time, respectively.
     - *w_calculated*, *w_initial*: Arrays of the Lorentz factor ($W$) at final time ($tmax$) and at initial time, respectively.
     - *x_space*: Array of the spatial domain, going from $xmin$ to $xmax$ depending on the problem under consideration.
-- **Example_Problem/**: This folder contains example Python code using PyTorch to train a GA-PINN, corresponding to the *training_script.py* file. By default, the images and exported data are saved in the *Images/* and *Models_Data/* subfolders respectively, while the *.pt* files corresponding to the weights of the neural model are stored inside the *Models_Data/Model_Saved/* folder.
-- **custom_activations.py**: Script containing the custom activation functions that may be needed in the training procedures. These functions consider the slope parameter that could be trainable, as explained in the paper. More can be defined if needed, but as it is right now the script contains functions such as the hyperbolic tangent, the sigmoid, Heaviside, and softplus functions.
+- **Sod_Shock_Tube/**: This folder contains example Python code using PyTorch to train a GA-PINN, corresponding to the *training_script.py* file. By default, the images and exported data are saved in the *Images/* and *Models_Data/* subfolders respectively, while the *.pt* files corresponding to the weights of the neural model are stored inside the *Models_Data/Model_Saved/* folder.
 - **models.py**: This script contains all the necessary code to define the *GA_PINN* class as reading from the *torch.nn.Module*. This class is imported into the aforementioned *training_script.py* of the example. As input, it admits the configuration file which is imported as a JSON within the training script.
 - **utils.py**: Script containing some additional functions such as a function to save the results as *.h5* files, a function to plot them, and also functions to generate the physical domain and the initial conditions.
-- **config.json**: This file corresponds to the configuration JSON of the training and the model. It contains several fields that can be modified in order to train the GA-PINN.
+- **Sod_Sochk_Tube/config.json**: This file corresponds to the configuration JSON of the training and the model. It contains several fields that can be modified in order to train the GA-PINN.
     - *physical*:
         - *parameters*:
             - *adiabatic_constant*: $\Gamma$ factor of the equations of the hydrodynamics.
@@ -38,13 +37,14 @@ The main purpose of this repository is to provide reproducible code for the GA-P
             - *number_neurons*: Number of neurons per layer. At this moment it is the same value for all of the hidden layers.
             - *init*: Method to initialize the parameters of the network. At this point, only 'xavier_uniform_' with $gain=1.0$ is considered.
         - *activation_functions*:
-            - *hidden_layers*: Activation function for the hidden layers. It must be a string that will be evaluated by the script so it needs to be written as a literal string indicating which activation function we want to use. For example, in case that we want to use a vanilla hyperbolic tangent in PyTorch, we should write 'nn.Tanh()'. In case we want to use a function with trainable slopes we would need to call the custom functions inside *custom_activations.py*, as the one that is already written as example.
+            - *hidden_layers*: Activation function for the hidden layers. It must be a string that will be evaluated by the script so it needs to be written as a literal string indicating which activation function we want to use. For example, in case that we want to use a vanilla hyperbolic tangent in PyTorch, we should write 'nn.Tanh()'.
             - *output*: In a similar way the same happens for the output variables, except that we have a list of 3 activation functions, corresponding to the density, velocity and pressure, respectively.
         - *loss_function_parameters*:
             - *w_R*: Weight of the residual (collocation) part of the loss, $\hat{\mathcal{L}}_{\mathcal{R}}$.
             - *w_IC*: List of the weights of the initial part of the loss, $\mathcal{L}_{\mathcal{IC}}$, corresponding to each one of the variables (density,velocity,pressure).
-            - *alpha_set*: Set of hyperparameters corresponding to ($\alpha_{\rho}$, $\alpha_{u}$, $\alpha_{p}$), that is, the weight of the respective gradients in the GA-PINN methodology.
-            - *beta_set*: Analogously, this defines the set of hyperparameters ($\beta_{\rho}$, $\beta_{u}$, $\beta_{p}$) corresponding to the exponents of the respective gradients.
+            - *$\alpha$_set*: Set of hyperparameters corresponding to ($\alpha_{\rho}$, $\alpha_{u}$, $\alpha_{p}$), that is, the weight of the respective gradients in the GA-PINN methodology.
+            - *$\beta$_set*: Analogously, this defines the set of hyperparameters ($\beta_{\rho}$, $\beta_{u}$, $\beta_{p}$) corresponding to the exponents of the respective gradients.
+            - *$\epsilon_{t}$*: OPTIONAL: Strenght parameter for the causality-enforcement.
     - *training_process*:
         - *device*: Defines the device that *PyTorch* is going to use (e.g. "cpu" or "cuda").
         - *DTYPE*: General DTYPE for the data. It is recommended to use *torch.float32*.

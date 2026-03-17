@@ -65,8 +65,8 @@ for epoch in pbar:
 
     # ==== Compute loss and update model parameters ====
     optimizer.zero_grad(set_to_none=True)
-    loss = utils.compute_loss(model, X.view(-1, 2), X_0, U_0)
-    loss.backward(retain_graph=False)
+    ℒ = utils.compute_ℒ(model, X.view(-1, 2), X_0, U_0)
+    ℒ.backward(retain_graph=False)
     torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
     optimizer.step()
 
@@ -74,9 +74,13 @@ for epoch in pbar:
     utils.compute_l2(model)
 
     # ==== Logging ====
-    model.loss_hist.append(loss.item())
     pbar.set_postfix(
-        {"loss_ic": model.loss_ic_hist[-1], "loss_total": model.loss_hist[-1]}
+        {
+            "ℒ_ic": model.histories['ℒ_ic_hist'][-1],
+            "ℒ": model.histories['ℒ_hist'][-1],
+            "l2": model.histories['l2_hist'][-1],
+            "AUC": model.histories['AUC_hist'][-1]
+        }
     )
     if epoch % config["training_process"]["export"]["save_each_data"] == 0:
         utils.save_results(model, config)

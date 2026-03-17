@@ -26,7 +26,7 @@ def define_optimizer(model, config):
     base_lr = config["training_process"]["parameters"]["learning_rate"]
 
     optimizer = pytorch_optimizer.SOAP(model.parameters(), lr=base_lr)
-    # Change for ADAM if needed:
+    # Change to ADAM if needed:
     # optimizer = torch.optim.Adam(model.parameters(), lr=base_lr)
     return optimizer
 
@@ -50,16 +50,14 @@ def load_analytical(config):
         config["training_process"]["import"]["analytical_solution_path"], "r"
     )
     x_analytical = torch.tensor(np.array(hf.get("x_space"))).view(-1, 1)
-    rho_analytical = torch.tensor(np.array(hf.get("dens_calculated"))).view(-1, 1)
+    ρ_analytical = torch.tensor(np.array(hf.get("dens_calculated"))).view(-1, 1)
     ux_analytical = torch.tensor(np.array(hf.get("ur_calculated"))).view(-1, 1)
     p_analytical = torch.tensor(np.array(hf.get("p_calculated"))).view(-1, 1)
     hf.close()
     t_analytical = torch.tensor(tmax).repeat((x_analytical.shape[0], 1))
 
     analytical_space = torch.cat((t_analytical, x_analytical), dim=1)
-    analytical_variables = torch.cat(
-        (rho_analytical, ux_analytical, p_analytical), dim=1
-    )
+    analytical_variables = torch.cat((ρ_analytical, ux_analytical, p_analytical), dim=1)
 
     return analytical_space, analytical_variables
 
@@ -80,23 +78,23 @@ def initial_conditions(x, config):
             Tensor containing the initial conditions for the primitive variables.
     """
 
-    rhoL, rhoR = config["physical"]["initial_conditions"]["density"]
+    ρL, ρR = config["physical"]["initial_conditions"]["density"]
     uxL, uxR = config["physical"]["initial_conditions"]["velocity"]
     pL, pR = config["physical"]["initial_conditions"]["pressure"]
 
     x_numpy = x.detach().cpu().numpy()
-    ic_rho = lambda x: (rhoL) * (x <= 0.5) + (rhoR) * (x > 0.5)
+    ic_ρ = lambda x: (ρL) * (x <= 0.5) + (ρR) * (x > 0.5)
     ic_ux = lambda x: (uxL) * (x <= 0.5) + (uxR) * (x > 0.5)
     ic_p = lambda x: (pL) * (x <= 0.5) + (pR) * (x > 0.5)
 
     W_tensor = torch.tensor(
         1 / (1 - (ic_ux(x_numpy) ** 2)) ** (1 / 2), requires_grad=True
     )
-    rho_tensor = torch.tensor(ic_rho(x_numpy), requires_grad=True)
+    ρ_tensor = torch.tensor(ic_ρ(x_numpy), requires_grad=True)
     ux_tensor = torch.tensor(ic_ux(x_numpy), requires_grad=True)
     p_tensor = torch.tensor(ic_p(x_numpy), requires_grad=True)
 
-    output_ICs = torch.cat((rho_tensor, ux_tensor, p_tensor), dim=1)
+    output_ICs = torch.cat((ρ_tensor, ux_tensor, p_tensor), dim=1)
     return output_ICs
 
 
@@ -121,10 +119,10 @@ def generate_domain(config):
     )
     N_0 = eval(config["physical"]["parameters"]["N_0"])
 
-    # Generate data (internal)
-    ## Define list to save tensors
+    # ==== Generate data (internal) ====
+    ## ==== Define list to save tensors ====
     X_list = []
-    ## Define main temporal domain
+    ## ==== Define main temporal domain ====
     sampler = qmc.Sobol(d=1, scramble=False)
     sample = sampler.random_base2(m=int(np.log2(N_t)))
     l_bounds, u_bounds = [tmin], [tmax]
@@ -144,7 +142,7 @@ def generate_domain(config):
     X = torch.stack(X_list)
     X.requires_grad = True
 
-    # Generate data (initial)
+    # ==== Generate data (initial) ====
     t_0 = torch.tensor(tmin).repeat((N_0, 1)).view(-1, 1)
     sampler = qmc.Sobol(d=1, scramble=False)
     sample = sampler.random_base2(m=int(np.log2(N_0)))
@@ -168,7 +166,7 @@ def plot_results(model, config):
             Configuration file for the training.
     """
 
-    # Data for t=tmax.
+    # ==== Data for t=tmax ====
     t_final = (
         torch.tensor(model.tmax, dtype=model.DTYPE, requires_grad=True)
         .repeat((30, 1))
@@ -185,19 +183,19 @@ def plot_results(model, config):
     )
     X_final = torch.cat((t_final, x_final), dim=1)
     prediction_tmax = model(X_final).detach().cpu().numpy()
-    rho_final, ux_final, p_final = (
+    ρ_final, ux_final, p_final = (
         prediction_tmax[:, 0:1],
         prediction_tmax[:, 1:2],
         prediction_tmax[:, 2:3],
     )
     X_final = X_final.detach().cpu().numpy()
 
-    # Plot of the final variables.
+    # ==== Plot of the final variables ====
     fig, ax = plt.subplots(1, 3, figsize=(9, 3.5), constrained_layout=True)
-    ## Final density plot
+    ## ==== Final density plot ====
     ax[0].scatter(
         X_final[:, 1:2],
-        rho_final,
+        ρ_final,
         color="blue",
         marker="o",
         facecolors="none",
@@ -213,7 +211,7 @@ def plot_results(model, config):
     ax[0].set_xlabel(r"$x$")
     ax[0].set_title("density")
     ax[0].legend()
-    ## Final velocity plot
+    ## ==== Final velocity plot ====
     ax[1].scatter(
         X_final[:, 1:2],
         ux_final,
@@ -232,7 +230,7 @@ def plot_results(model, config):
     ax[1].set_xlabel(r"$x$")
     ax[1].set_title("velocity")
     ax[1].legend()
-    ## Final density plot
+    ## ==== Final density plot ====
     ax[2].scatter(
         X_final[:, 1:2],
         p_final,
@@ -253,31 +251,31 @@ def plot_results(model, config):
     ax[2].legend()
 
     plt.suptitle("t=" + str(model.tmax) + ", " + str(model.epoch) + " epochs")
-    plt.savefig(config["training_process"]["export"]["path_images"] + "results.png")
+    plt.savefig(config["training_process"]["export"]["path_images"] + "results.png", format="png", dpi=300)
     plt.close()
 
-    # Plot of the losses and relative L2.
+    # ==== Plot of the losses and relative L2 ====
     fig, ax = plt.subplots(1, 2, figsize=(9, 3), constrained_layout=True)
-    ax[0].semilogy(range(len(model.loss_hist)), model.loss_hist, "k-")
+    ax[0].semilogy(range(len(model.histories['ℒ_hist'])), model.histories['ℒ_hist'], "k-")
     ax[0].set_xlabel("epoch")
     ax[0].set_title(r"$\mathcal{L}$")
     for tick in ax[1].get_xticklabels():
         tick.set_rotation(45)
     ax[1].semilogy(
-        range(len(model.l2_rho_hist)),
-        model.l2_rho_hist,
+        range(len(model.histories['l2_ρ_hist'])),
+        model.histories['l2_ρ_hist'],
         "k-",
         label=r"$l_{\rho_{\theta}}^{2}$",
     )
     ax[1].semilogy(
-        range(len(model.l2_ux_hist)),
-        model.l2_ux_hist,
+        range(len(model.histories['l2_ux_hist'])),
+        model.histories['l2_ux_hist'],
         "b-",
         label=r"$l_{u_{\theta}}^{2}$",
     )
     ax[1].semilogy(
-        range(len(model.l2_p_hist)),
-        model.l2_p_hist,
+        range(len(model.histories['l2_p_hist'])),
+        model.histories['l2_p_hist'],
         "g-",
         label=r"$l_{p_{\theta}}^{2}$",
     )
@@ -286,9 +284,10 @@ def plot_results(model, config):
     ax[1].set_title(r"$l^{2}$")
     for tick in ax[1].get_xticklabels():
         tick.set_rotation(45)
-    plt.savefig(config["training_process"]["export"]["path_images"] + "losses.png")
+    plt.savefig(config["training_process"]["export"]["path_images"] + "losses.png", format="png", dpi=300)
 
     plt.close("all")
+
 
 
 def save_results(model, config):
@@ -297,151 +296,188 @@ def save_results(model, config):
     Parameters
     ----------
     model : 'GA_PINN' object from 'nn.Module'.
-            Model object.
-    config : dictionary
+        Model object.
+        config : dictionary
             Configuration file for the training.
     """
 
-    hf = h5py.File(
-        config["training_process"]["export"]["path_data"]
-        + "data_"
-        + str(model.epoch)
-        + ".h5",
-        "w",
-    )
+    DTYPE  = eval(config["training_process"]["DTYPE"])
+    device = torch.device(config["training_process"]["device"])
 
-    hf.create_dataset("loss_hist", data=np.array(model.loss_hist))
-    hf.create_dataset("loss_ic_hist", data=np.array(model.loss_ic_hist))
+    path_data = config["training_process"]["export"]["path_data"]
 
-    hf.create_dataset("loss_ic_rho", data=np.array(model.loss_ic_rho))
-    hf.create_dataset("loss_ic_ux", data=np.array(model.loss_ic_ux))
-    hf.create_dataset("loss_ic_p", data=np.array(model.loss_ic_p))
+    # Helper to convert whatever is stored to a NumPy array
+    def to_numpy(x):
+        if isinstance(x, torch.Tensor):
+            return x.detach().cpu().numpy()
+        else:
+            return np.array(x)
 
-    hf.create_dataset("l2_rho_hist", data=np.array(model.l2_rho_hist))
-    hf.create_dataset("l2_ux_hist", data=np.array(model.l2_ux_hist))
-    hf.create_dataset("l2_p_hist", data=np.array(model.l2_p_hist))
-    hf.create_dataset("l2_hist", data=np.array(model.l2_hist))
+    # ==== Export training histories ====
+    if hasattr(model, "histories") and isinstance(model.histories, dict):
+        with h5py.File(path_data + "data_training.h5", "w") as hf_train:
+            for key, value in model.histories.items():
+                try:
+                    data_np = to_numpy(value)
+                    hf_train.create_dataset(key, data=data_np)
+                except Exception as e:
+                    print(f"[export_data] Not saving histories['{key}']: {e}")
 
-    hf.close()
+    # ==== Export evaluation metrics ====
+    if hasattr(model, "metrics") and isinstance(model.metrics, dict):
+        with h5py.File(path_data + "data_eval.h5", "w") as hf_eval:
+            for key, value in model.metrics.items():
+                try:
+                    data_np = to_numpy(value)
+                    hf_eval.create_dataset(key, data=data_np)
+                except Exception as e:
+                    print(f"[export_data] Not saving metrics['{key}']: {e}")
+
+    # ==== Export model weights at this point ====
+    torch.save(model.state_dict(), config['training_process']['export']['path_models'] + 'model_weights.pt')
 
 
-def compute_loss(model, X, X_0, U_0):
+def compute_ℒ(model, X, X_0, U_0):
     """Function to compute the physical loss used for training."""
+
+    # ==== Extract time and space, and predict ====
+    N_t, N_x = model.N_t, model.N_x
     t, x = X[:, 0:1], X[:, 1:2]
-    prediction = model(torch.cat((t, x), dim=1))
-    rho, ux, p = prediction[:, 0:1], prediction[:, 1:2], prediction[:, 2:3]
-    ux = torch.clamp(ux, max=0.9999, min=-0.9999)
-    e = p / (rho * (model.gamma - 1.0))
+    out = model(torch.cat((t, x), dim=1))
+    ρ, ux, p = out[:, 0:1], out[:, 1:2], out[:, 2:3]
 
     W = 1 / torch.sqrt(1 - ux**2)
 
-    D = rho * W
-    Mx = ux * (rho + p * model.gamma / (model.gamma - 1.0)) * (W**2)
-    E = (rho + p * model.gamma / (model.gamma - 1.0)) * (W**2) - p
+    # ==== Compute relativistic magnitudes ====
+    D = ρ * W
+    Mx = ux * (ρ + p * model.𝛾 / (model.𝛾 - 1.0)) * (W**2)
+    E = (ρ + p * model.𝛾 / (model.𝛾 - 1.0)) * (W**2) - p
 
+    # ==== Compute fluxes ====
     F1 = D * ux
     F2x = Mx * ux + p
     F3 = (E + p) * ux
 
-    D_t = torch.autograd.grad(D, t, grad_outputs=torch.ones_like(D), create_graph=True)[
-        0
-    ]
-    Mx_t = torch.autograd.grad(
+    # ==== Compute gradients with autograd ====
+    dD_dt = torch.autograd.grad(
+        D, t, grad_outputs=torch.ones_like(D), create_graph=True
+    )[0]
+    dMx_dt = torch.autograd.grad(
         Mx, t, grad_outputs=torch.ones_like(Mx), create_graph=True
     )[0]
-    E_t = torch.autograd.grad(E, t, grad_outputs=torch.ones_like(E), create_graph=True)[
-        0
-    ]
+    dE_dt = torch.autograd.grad(
+        E, t, grad_outputs=torch.ones_like(E), create_graph=True
+    )[0]
 
-    F1_x = torch.autograd.grad(
+    dF1_dx = torch.autograd.grad(
         F1, x, grad_outputs=torch.ones_like(F1), create_graph=True
     )[0]
-    F2x_x = torch.autograd.grad(
+    dF2x_dx = torch.autograd.grad(
         F2x, x, grad_outputs=torch.ones_like(F2x), create_graph=True
     )[0]
-    F3_x = torch.autograd.grad(
+    dF3_dx = torch.autograd.grad(
         F3, x, grad_outputs=torch.ones_like(F3), create_graph=True
     )[0]
 
-    rho_x = torch.autograd.grad(
-        rho, x, grad_outputs=torch.ones_like(rho), create_graph=True
+    dρ_dx = torch.autograd.grad(
+        ρ, x, grad_outputs=torch.ones_like(ρ), create_graph=True
     )[0]
-    ux_x = torch.autograd.grad(
+    dux_dx = torch.autograd.grad(
         ux, x, grad_outputs=torch.ones_like(ux), create_graph=True
     )[0]
-    p_x = torch.autograd.grad(p, x, grad_outputs=torch.ones_like(p), create_graph=True)[
-        0
-    ]
+    dp_dx = torch.autograd.grad(
+        p, x, grad_outputs=torch.ones_like(p), create_graph=True
+    )[0]
 
-    model.alpha_rho, model.alpha_ux, model.alpha_p = model.config["neural"][
-        "loss_function_parameters"
-    ]["alpha_set"]
-    model.beta_rho, model.beta_ux, model.beta_p = model.config["neural"][
-        "loss_function_parameters"
-    ]["beta_set"]
+    model.α_ρ, model.α_ux, model.α_p = model.config["neural"]["loss_function_parameters"]["α_set"]
+    model.β_ρ, model.β_ux, model.β_p = model.config["neural"]["loss_function_parameters"]["β_set"]
     Lambda = 1 / (
         1
         + (
-            model.alpha_rho * torch.abs(rho_x) ** model.beta_rho
-            + model.alpha_ux * torch.abs(ux_x) ** model.beta_ux
-            + model.alpha_p * torch.abs(p_x) ** model.beta_p
+            model.α_ρ * torch.abs(dρ_dx) ** model.β_ρ
+            + model.α_ux * torch.abs(dux_dx) ** model.β_ux
+            + model.α_p * torch.abs(dp_dx) ** model.β_p
         )
-    ).view(model.N_t, model.N_x, 1)
+    ).view(N_t, N_x, 1)
     model.Lambda = Lambda
-    # Compute Losses
+    # ==== Compute Losses ====
     # ================================================================================================================================
-    ## Losses of the equations conforming the system
+    ## ==== Losses of the equations conforming the system ====
     ### These present shape of (N_t, N_x, 1)
-    L_t_1 = torch.square(D_t + F1_x).view(model.N_t, model.N_x, 1)
-    L_t_2 = torch.square(Mx_t + F2x_x).view(model.N_t, model.N_x, 1)
-    L_t_3 = torch.square(E_t + F3_x).view(model.N_t, model.N_x, 1)
+    ℒ_t_1 = (dD_dt + dF1_dx).pow(2).view(N_t, N_x, 1)
+    ℒ_t_2 = (dMx_dt + dF2x_dx).pow(2).view(N_t, N_x, 1)
+    ℒ_t_3 = (dE_dt + dF3_dx).pow(2).view(N_t, N_x, 1)
 
-    ## Total physical loss
-    L_t = torch.mean(Lambda * (L_t_1 + L_t_2 + L_t_3), dim=1)
+    ## ==== Total physical loss ====
+    ℒ_t = torch.mean(Lambda * (ℒ_t_1 + ℒ_t_2 + ℒ_t_3), dim=1)
     # ================================================================================================================================
 
-    ## Compute loss for tmin (L_IC).
+    ## ==== Compute loss for tmin (L_IC) ====
     prediction_tmin = model(X_0)
-    # Consider a certain weight for the IC (hyperparameter) and for the collocation loss.
-    w_rho, w_ux, w_p = model.config["neural"]["loss_function_parameters"]["w_IC"]
+    # ==== Consider a certain weight for the IC (hyperparameter) and for the collocation loss ====
+    w_ρ, w_ux, w_p = model.config["neural"]["loss_function_parameters"]["w_IC"]
     w_R = model.config["neural"]["loss_function_parameters"]["w_R"]
-    # Compute initial losses.
-    L_IC_rho = w_rho * torch.square(U_0[:, 0:1] - prediction_tmin[:, 0:1]).mean()
-    L_IC_ux = w_ux * torch.square(U_0[:, 1:2] - prediction_tmin[:, 1:2]).mean()
-    L_IC_p = w_p * torch.square(U_0[:, 2:3] - prediction_tmin[:, 2:3]).mean()
-    L_IC = L_IC_rho + L_IC_ux + L_IC_p
-    L_t = torch.cat((L_IC.view(1, 1), L_t[1:]), dim=0)
-    ### Take advantage and save initial losses into lists
-    model.loss_ic_hist.append(L_IC.item())
-    model.loss_ic_rho.append(
+    # ==== Compute initial losses ====
+    ℒ_IC_ρ = w_ρ * torch.square(U_0[:, 0:1] - prediction_tmin[:, 0:1]).mean()
+    ℒ_IC_ux = w_ux * torch.square(U_0[:, 1:2] - prediction_tmin[:, 1:2]).mean()
+    ℒ_IC_p = w_p * torch.square(U_0[:, 2:3] - prediction_tmin[:, 2:3]).mean()
+    ℒ_IC = ℒ_IC_ρ + ℒ_IC_ux + ℒ_IC_p
+    # ==== Compute total loss ====
+    ## ==== 'ℒ_t' is a column vector (N_t,1), where the first element corresponds to the ICs loss ====
+    ℒ_t = torch.cat((ℒ_IC.view(1, 1), w_R * ℒ_t[1:]), dim=0)
+    # ==== If ε_t != 0, then causality is enforced; otherwise, put this parameter equal to zero in the config.json file ====
+    ## ==== (OPTIONAL): This procedure was not implemented in the original paper; this is a direct improvement of the original methodology ====
+    if model.ε_t != 0:
+        zeros_t = torch.zeros(1, 1, device=X.device, dtype=ℒ_t.dtype)
+        ℒ_t_shifted = torch.cat((zeros_t, ℒ_t[:-1]), dim=0)
+        ℒ_t_cumsum = torch.cumsum(ℒ_t_shifted, dim=0)
+        w_t = torch.exp(-model.ε_t * ℒ_t_cumsum)
+        ℒ = (w_t * ℒ_t).mean()
+        # ==== Compute 'AUC': Area under the weights curve. AUC is in [0,1], having AUC --> 1.0 when causality has been totally enforced. ====
+        dx = 1.0 / float(X.shape[0]-1)
+        AUC = torch.trapz(w_t.view(-1), dx=dx).item()
+        model.histories['AUC_hist'].append(AUC)
+    else:
+        ℒ = ℒ_t.mean()
+
+
+    ### ==== Log losses ====
+    model.histories['ℒ_hist'].append(ℒ.item())
+    model.histories['ℒ_ic_ρ'].append(
         torch.square(U_0[:, 0:1] - prediction_tmin[:, 0:1]).mean().item()
     )
-    model.loss_ic_ux.append(
+    model.histories['ℒ_ic_ux'].append(
         torch.square(U_0[:, 1:2] - prediction_tmin[:, 1:2]).mean().item()
     )
-    model.loss_ic_p.append(
+    model.histories['ℒ_ic_p'].append(
         torch.square(U_0[:, 2:3] - prediction_tmin[:, 2:3]).mean().item()
     )
-    return L_t.mean()
+    # ==== Save IC losses without the weight scaling: raw MSE ====
+    model.histories['ℒ_ic_hist'].append(
+        model.histories['ℒ_ic_ρ'][-1] +
+        model.histories['ℒ_ic_ux'][-1] +
+        model.histories['ℒ_ic_p'][-1]
+    )
+    return ℒ
 
 
 def compute_l2(model):
     """Function to compute the l2 w.r.t. analytical solution."""
     with torch.no_grad():
         prediction = model(model.analytical_space)
-        rho_pred, ux_pred, p_pred = (
+        ρ_pred, ux_pred, p_pred = (
             prediction[:, 0:1],
             prediction[:, 1:2],
             prediction[:, 2:3],
         )
-        rho_truth, ux_truth, p_truth = (
+        ρ_truth, ux_truth, p_truth = (
             model.analytical_solution[:, 0:1],
             model.analytical_solution[:, 1:2],
             model.analytical_solution[:, 2:3],
         )
 
-        l2_rho = torch.sqrt(
-            torch.square(rho_truth - rho_pred).sum() / torch.square(rho_truth).sum()
+        l2_ρ = torch.sqrt(
+            torch.square(ρ_truth - ρ_pred).sum() / torch.square(ρ_truth).sum()
         ).item()
         l2_ux = torch.sqrt(
             torch.square(ux_truth - ux_pred).sum() / torch.square(ux_truth).sum()
@@ -449,7 +485,7 @@ def compute_l2(model):
         l2_p = torch.sqrt(
             torch.square(p_truth - p_pred).sum() / torch.square(p_truth).sum()
         ).item()
-        model.l2_rho_hist.append(l2_rho)
-        model.l2_ux_hist.append(l2_ux)
-        model.l2_p_hist.append(l2_p)
-        model.l2_hist.append(l2_rho + l2_ux + l2_p)
+        model.histories['l2_ρ_hist'].append(l2_ρ)
+        model.histories['l2_ux_hist'].append(l2_ux)
+        model.histories['l2_p_hist'].append(l2_p)
+        model.histories['l2_hist'].append(l2_ρ + l2_ux + l2_p)
