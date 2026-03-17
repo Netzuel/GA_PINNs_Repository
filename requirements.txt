@@ -3,3 +3,4 @@ pip install h5py==3.6.0
 pip install scipy==1.7.3
 pip install torch==1.11.0 torchvision==0.12.0 torchaudio==0.11.0
 pip install matplotlib==3.6.2
+pip install pytorch_optimizer
